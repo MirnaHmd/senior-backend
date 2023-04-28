@@ -26,8 +26,28 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $input = $request->validate([
+            'fname' => ['required', 'string', 'max:256'],
+            'lname' => ['required', 'string'],
+            'email' => ['required', 'string', 'max:256'],
+            'password' => ['required', 'string', 'max:256'],
+            'gender' => ['required', 'string', 'max:256'],
+            'nationality' => ['required', 'string', 'max:256'],
+            'number' => ['required', 'string', 'max:256'],
+            'location' => ['required', 'string', 'max:256'],
+             'major' => ['required', 'string', 'max:256']
+
+        ]);
         User::query()->create([
-            ''
+            'fname' => $request->input('fname'),
+            'lname' => $request->input('lname'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'gender' => $request->input('gender'),
+            'nationality' => $request->input('nationality'),
+            'number' => $request->input('number'),
+            'location' => $request->input('location'),
+            'major' => $request->input('major')
         ]);
     }
 
@@ -49,8 +69,28 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        User::query()->update([
+        $input = $request->validate([
+            'fname' => ['required', 'string', 'max:256'],
+            'lname' => ['required', 'string'],
+            'email' => ['required', 'string', 'max:256'],
+            'password' => ['required', 'string', 'max:256'],
+            'gender' => ['required', 'string', 'max:256'],
+            'nationality' => ['required', 'string', 'max:256'],
+            'number' => ['required', 'string', 'max:256'],
+            'location' => ['required', 'string', 'max:256'],
+            'major' => ['required', 'string', 'max:256']
 
+        ]);
+        $user ->update([
+            'fname' => $request->input('fname'),
+            'lname' => $request->input('lname'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'gender' => $request->input('gender'),
+            'nationality' => $request->input('nationality'),
+            'number' => $request->input('number'),
+            'location' => $request->input('location'),
+            'major' => $request->input('major')
         ]);
     }
 

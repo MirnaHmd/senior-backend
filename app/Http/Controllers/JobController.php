@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class JobController extends Controller
 {
@@ -26,8 +28,24 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
+        $input = $request->validate([
+            'title' => ['required', 'string', 'max:256'],
+            'description' => ['required', 'string'],
+            'salary' => ['required', 'string', 'max:256'],
+            'company' => ['required', 'string', 'max:256'],
+            'location' => ['required', 'string', 'max:256'],
+            'industry' => ['required', 'string', 'max:256'],
+            'sector' => ['required', 'string', 'max:256']
+        ]);
+
         Job::query()->create([
-            ''
+            'job_title' => $request->input('title'),
+            'job_description' => $request->input('description'),
+            'salary_estimate' => $request->input('salary'),
+            'company_name' => $request->input('company'),
+            'location' => $request->input('location'),
+            'industry' => $request->input('industry'),
+            'sector' => $request->input('sector')
         ]);
     }
 
@@ -49,7 +67,25 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
+        $input = $request->validate([
+            'title' => ['required', 'string', 'max:256'],
+            'description' => ['required', 'string'],
+            'salary' => ['required', 'string', 'max:256'],
+            'company' => ['required', 'string', 'max:256'],
+            'location' => ['required', 'string', 'max:256'],
+            'industry' => ['required', 'string', 'max:256'],
+            'sector' => ['required', 'string', 'max:256']
+        ]);
 
+        $job->update([
+            'job_title' => $request->input('title'),
+            'job_description' => $request->input('description'),
+            'salary_estimate' => $request->input('salary'),
+            'company_name' => $request->input('company'),
+            'location' => $request->input('location'),
+            'industry' => $request->input('industry'),
+            'sector' => $request->input('sector')
+        ]);
     }
 
     /**

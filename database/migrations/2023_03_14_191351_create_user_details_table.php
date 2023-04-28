@@ -16,16 +16,15 @@ return new class extends Migration {
                 ->index()
                 ->unique()
                 ->constrained('users');
-            $table->date('birth_date');
+            $table->string('fName');
+            $table->string('lName');
+            $table->string('email');
+            $table->string('password');
             $table->string('gender');
             $table->string('nationality');
-            $table->string('city');
             $table->string('number');
-            $table->string('preferred_position');
-            $table->string('skills');
-            $table->string('languages');
-            $table->json('education');
-            $table->json('previous_positions');
+            $table->string('location');
+            $table->string('major');
             $table->timestamps();
         });
     }

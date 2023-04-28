@@ -16,18 +16,10 @@ return new class extends Migration
             $table->string('job_title');
             $table->string('salary_estimate');
             $table->text('job_description');
-            $table->float('rating');
             $table->string('company_name');
             $table->string('location');
-            $table->string('headquarters');
-            $table->string('size');
-            $table->string('founded');
-            $table->string('type_of_ownership');
             $table->string('industry');
             $table->string('sector');
-            $table->string('revenue');
-            $table->string('competitors');
-            $table->boolean('easy_apply');
         });
     }
 
