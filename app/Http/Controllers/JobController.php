@@ -49,9 +49,7 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        Job::query()->update([
 
-        ]);
     }
 
     /**
