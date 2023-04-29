@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string job_description
  * @property string company_name
  * @property string location
+ * @property string size
  * @property string industry
  * @property string sector
 **/

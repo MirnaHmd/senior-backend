@@ -34,6 +34,7 @@ class JobController extends Controller
             'salary' => ['required', 'string', 'max:256'],
             'company' => ['required', 'string', 'max:256'],
             'location' => ['required', 'string', 'max:256'],
+            'size' => ['required', 'string', 'max:256'],
             'industry' => ['required', 'string', 'max:256'],
             'sector' => ['required', 'string', 'max:256']
         ]);
@@ -44,6 +45,7 @@ class JobController extends Controller
             'salary_estimate' => $request->input('salary'),
             'company_name' => $request->input('company'),
             'location' => $request->input('location'),
+            'size' => $request->input('size'),
             'industry' => $request->input('industry'),
             'sector' => $request->input('sector')
         ]);
@@ -73,6 +75,7 @@ class JobController extends Controller
             'salary' => ['required', 'string', 'max:256'],
             'company' => ['required', 'string', 'max:256'],
             'location' => ['required', 'string', 'max:256'],
+            'size' => ['required', 'string', 'max:256'],
             'industry' => ['required', 'string', 'max:256'],
             'sector' => ['required', 'string', 'max:256']
         ]);
@@ -83,6 +86,7 @@ class JobController extends Controller
             'salary_estimate' => $request->input('salary'),
             'company_name' => $request->input('company'),
             'location' => $request->input('location'),
+            'size' => $request->input('size'),
             'industry' => $request->input('industry'),
             'sector' => $request->input('sector')
         ]);

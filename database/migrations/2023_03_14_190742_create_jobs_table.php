@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('job_description');
             $table->string('company_name');
             $table->string('location');
+            $table->string('size');
             $table->string('industry');
             $table->string('sector');
         });
