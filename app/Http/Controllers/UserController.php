@@ -92,6 +92,7 @@ class UserController extends Controller
             'location' => $request->input('location'),
             'major' => $request->input('major')
         ]);
+
     }
 
     /**
