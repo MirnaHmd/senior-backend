@@ -16,10 +16,6 @@ return new class extends Migration {
                 ->index()
                 ->unique()
                 ->constrained('users');
-            $table->string('fName');
-            $table->string('lName');
-            $table->string('email');
-            $table->string('password');
             $table->string('gender');
             $table->string('nationality');
             $table->string('number');

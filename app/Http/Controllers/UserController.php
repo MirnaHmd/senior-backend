@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -12,7 +12,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = UserDetail::all();
         return response()->json([
             'success' => [
                 'users' => $users
@@ -38,7 +38,7 @@ class UserController extends Controller
              'major' => ['required', 'string', 'max:256']
 
         ]);
-        User::query()->create([
+        UserDetail::query()->create([
             'fname' => $request->input('fname'),
             'lname' => $request->input('lname'),
             'email' => $request->input('email'),
@@ -54,7 +54,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(UserDetail $user)
     {
         return response()->json([
             'success' => [
@@ -67,7 +67,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, UserDetail $user)
     {
         $input = $request->validate([
             'fname' => ['required', 'string', 'max:256'],
@@ -97,7 +97,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(UserDetail $user)
     {
         $user->delete();
     }
