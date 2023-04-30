@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(\App\Models\User::class, 'user_id')
+                ->index()
+                ->nullable()
+                ->default(null)
+                ->constrained('users');
             $table->string('job_title');
             $table->string('salary_estimate');
             $table->text('job_description');

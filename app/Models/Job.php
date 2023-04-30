@@ -15,8 +15,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property string size
  * @property string industry
  * @property string sector
-**/
+ **/
 class Job extends Model
 {
     use HasFactory;
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(User::class);
+    }
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, UserJob::class);
+    }
+
 }
