@@ -99,4 +99,8 @@ class JobController extends Controller
     {
         $job->delete();
     }
+    public function getLocations(){
+        $locations = job::query()->distinct()->get(['location']);
+
+    }
 }
