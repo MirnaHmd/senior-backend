@@ -100,7 +100,9 @@ class JobController extends Controller
         $job->delete();
     }
     public function getLocations(){
-        $locations = job::query()->distinct()->get(['location']);
-
+        return job::query()->distinct()->get(['location']);
+    }
+    public function getIndustries(){
+        return job::query()->where(['industry', '!=', -1])->distinct()->get(['industry']);
     }
 }
