@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/oauth/token', [\Laravel\Passport\Http\Controllers\AccessTokenController::class, 'issueToken'])->name('token');
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::resource('job', \App\Http\Controllers\JobController::class)->except(['edit', 'create']);
+    Route::resource('user', \App\Http\Controllers\UserController::class)->except(['edit', 'create']);
 });
 Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
     Route::get('/locations', [\App\Http\Controllers\JobController::class, 'getLocations'])->name('get-locations');
     Route::get('/industries', [\App\Http\Controllers\JobController::class, 'getIndustries'])->name('get-industries');
 });
-Route::resource('job', \App\Http\Controllers\JobController::class)->except(['edit', 'create']);
-Route::resource('user', \App\Http\Controllers\UserController::class)->except(['edit', 'create']);
