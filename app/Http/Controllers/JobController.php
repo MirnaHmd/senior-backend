@@ -6,6 +6,7 @@ use App\Models\Job;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Nette\Schema\ValidationException;
 
 class JobController extends Controller
 {
@@ -31,23 +32,23 @@ class JobController extends Controller
         $input = $request->validate([
             'title' => ['required', 'string', 'max:256'],
             'description' => ['required', 'string'],
-            'salary' => ['required', 'string', 'max:256'],
             'company' => ['required', 'string', 'max:256'],
             'location' => ['required', 'string', 'max:256'],
-            'size' => ['required', 'string', 'max:256'],
             'industry' => ['required', 'string', 'max:256'],
-            'sector' => ['required', 'string', 'max:256']
         ]);
 
         Job::query()->create([
             'job_title' => $request->input('title'),
             'job_description' => $request->input('description'),
-            'salary_estimate' => $request->input('salary'),
             'company_name' => $request->input('company'),
             'location' => $request->input('location'),
-            'size' => $request->input('size'),
             'industry' => $request->input('industry'),
-            'sector' => $request->input('sector')
+        ]);
+        return response()->json([
+            'success' => [
+                'job' => ['Created']
+            ],
+            'message' => 'Job created successfully'
         ]);
     }
 
@@ -69,26 +70,34 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        $input = $request->validate([
-            'title' => ['required', 'string', 'max:256'],
-            'description' => ['required', 'string'],
-            'salary' => ['required', 'string', 'max:256'],
-            'company' => ['required', 'string', 'max:256'],
-            'location' => ['required', 'string', 'max:256'],
-            'size' => ['required', 'string', 'max:256'],
-            'industry' => ['required', 'string', 'max:256'],
-            'sector' => ['required', 'string', 'max:256']
-        ]);
-
+        try {
+            $request->validate([
+                'title' => [ 'string', 'max:256'],
+                'description' => ['string'],
+                'company' => ['string', 'max:256'],
+                'location' => ['string', 'max:256'],
+                'industry' => ['string', 'max:256'],
+            ]);
+        }catch (ValidationException $exception){
+            return response()->json([
+                'error' => [
+                    $exception->errors()
+                ],
+                'message' => $exception->getMessage()
+            ]);
+        }
         $job->update([
             'job_title' => $request->input('title'),
             'job_description' => $request->input('description'),
-            'salary_estimate' => $request->input('salary'),
             'company_name' => $request->input('company'),
             'location' => $request->input('location'),
-            'size' => $request->input('size'),
             'industry' => $request->input('industry'),
-            'sector' => $request->input('sector')
+        ]);
+        return response()->json([
+            'success' => [
+                'job' => ['Updated']
+            ],
+            'message' => 'Job updated successfully'
         ]);
     }
 

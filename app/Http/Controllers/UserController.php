@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -28,33 +31,40 @@ class UserController extends Controller
     {
         $input = $request->validate([
             'fname' => ['required', 'string', 'max:256'],
-            'lname' => ['required', 'string'],
-            'email' => ['required', 'string', 'max:256'],
+            'lname' => ['required', 'string', 'max:256'],
+            'email' => ['required', 'string', 'max:256', 'email'],
             'password' => ['required', 'string', 'max:256'],
             'gender' => ['required', 'string', 'max:256'],
-            'nationality' => ['required', 'string', 'max:256'],
             'number' => ['required', 'string', 'max:256'],
             'location' => ['required', 'string', 'max:256'],
-             'major' => ['required', 'string', 'max:256']
-
+            'major' => ['required', 'string', 'max:256'],
+            'role' => ['required', 'string', 'max:256']
         ]);
+
         UserDetail::query()->create([
-            'fname' => $request->input('fname'),
-            'lname' => $request->input('lname'),
+            'first_name' => $request->input('fname'),
+            'last_name' => $request->input('lname'),
             'email' => $request->input('email'),
-            'password' => $request->input('password'),
+            'password' => Hash::make($request->input('password')),
             'gender' => $request->input('gender'),
-            'nationality' => $request->input('nationality'),
             'number' => $request->input('number'),
             'location' => $request->input('location'),
-            'major' => $request->input('major')
+            'major' => $request->input('major'),
+            'role' => $request->input('role')
+        ]);
+
+        return response()->json([
+            'success' => [
+                'user' => ['Created']
+            ],
+            'message' => 'User Created Successfully'
         ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(UserDetail $user)
+    public function show(User $user)
     {
         return response()->json([
             'success' => [
@@ -67,38 +77,55 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, UserDetail $user)
+    public function update(Request $request, User $user)
     {
-        $input = $request->validate([
-            'fname' => ['required', 'string', 'max:256'],
-            'lname' => ['required', 'string'],
-            'email' => ['required', 'string', 'max:256'],
-            'password' => ['required', 'string', 'max:256'],
-            'gender' => ['required', 'string', 'max:256'],
-            'nationality' => ['required', 'string', 'max:256'],
-            'number' => ['required', 'string', 'max:256'],
-            'location' => ['required', 'string', 'max:256'],
-            'major' => ['required', 'string', 'max:256']
+        try {
+            $request->validate([
+                'fname' => ['string', 'max:256'],
+                'lname' => ['string', 'max:256'],
+                'email' => ['string', 'max:256'],
+                'password' => [ 'string', 'max:256'],
+                'gender' =>  ['string', 'max:256'],
+                'number' => [ 'string', 'max:256'],
+                'location' => [ 'string', 'max:256'],
+                'major' => [ 'string', 'max:256'],
+                'role' => ['string', 'max:256']
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'error' => [
+                    $exception->errors()
+                ],
+                'message' => $exception->getMessage()
+            ]);
+        }
 
-        ]);
-        $user ->update([
-            'fname' => $request->input('fname'),
-            'lname' => $request->input('lname'),
+        $user->update([
+            'first_name' => $request->input('fname'),
+            'last_name' => $request->input('lname'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
             'gender' => $request->input('gender'),
-            'nationality' => $request->input('nationality'),
             'number' => $request->input('number'),
             'location' => $request->input('location'),
-            'major' => $request->input('major')
+            'major' => $request->input('major'),
+            'role' => $request->input('role')
+        ]);
+
+        return response()->json([
+            'success' => [
+                'user' => ['Updated']
+            ],
+            'message' => 'User Updated Successfully'
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserDetail $user)
+    public function destroy(User $user)
     {
+        $user->detail->detach();
         $user->delete();
     }
 }

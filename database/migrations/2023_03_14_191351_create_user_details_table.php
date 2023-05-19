@@ -17,7 +17,6 @@ return new class extends Migration {
                 ->unique()
                 ->constrained('users');
             $table->string('gender');
-            $table->string('nationality');
             $table->string('number');
             $table->string('location');
             $table->string('major');
