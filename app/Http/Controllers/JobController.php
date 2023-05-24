@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Nette\Schema\ValidationException;
+use phpseclib3\Math\BigInteger\Engines\PHP\Reductions\Barrett;
 
 class JobController extends Controller
 {
@@ -29,26 +28,31 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->validate([
-            'title' => ['required', 'string', 'max:256'],
-            'description' => ['required', 'string'],
-            'company' => ['required', 'string', 'max:256'],
+        $request->validate([
+            'job_title' => ['required', 'string', 'max:256'],
+            'job_description' => ['required', 'string'],
+            'company_name' => ['required', 'string', 'max:256'],
             'location' => ['required', 'string', 'max:256'],
             'industry' => ['required', 'string', 'max:256'],
         ]);
 
-        Job::query()->create([
-            'job_title' => $request->input('title'),
-            'job_description' => $request->input('description'),
-            'company_name' => $request->input('company'),
+        /**
+         * @var Job $job
+         */
+        $job = Job::query()->create([
+            'job_title' => $request->input('job_title'),
+            'user_id' => auth()->user()->id,
+            'job_description' => $request->input('job_description'),
+            'company_name' => $request->input('company_name'),
             'location' => $request->input('location'),
             'industry' => $request->input('industry'),
         ]);
+
         return response()->json([
             'success' => [
                 'job' => ['Created']
             ],
-            'message' => 'Job created successfully'
+            'message' => 'Job Created Successfully'
         ]);
     }
 
@@ -72,13 +76,13 @@ class JobController extends Controller
     {
         try {
             $request->validate([
-                'title' => [ 'string', 'max:256'],
+                'title' => ['string', 'max:256'],
                 'description' => ['string'],
                 'company' => ['string', 'max:256'],
                 'location' => ['string', 'max:256'],
                 'industry' => ['string', 'max:256'],
             ]);
-        }catch (ValidationException $exception){
+        } catch (ValidationException $exception) {
             return response()->json([
                 'error' => [
                     $exception->errors()
@@ -87,9 +91,9 @@ class JobController extends Controller
             ]);
         }
         $job->update([
-            'job_title' => $request->input('title'),
-            'job_description' => $request->input('description'),
-            'company_name' => $request->input('company'),
+            'job_title' => $request->input('job_title'),
+            'job_description' => $request->input('job_description'),
+            'company_name' => $request->input('company_name'),
             'location' => $request->input('location'),
             'industry' => $request->input('industry'),
         ]);
@@ -106,12 +110,25 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
+        $job->users()->detach();
         $job->delete();
     }
-    public function getLocations(){
+
+    public function getLocations()
+    {
         return job::query()->distinct()->pluck('location')->toArray();
     }
-    public function getIndustries(){
+
+    public function getIndustries()
+    {
         return job::query()->where([['industry', '!=', -1]])->distinct()->pluck('industry')->toArray();
+    }
+
+    public function getUserJobs()
+    {
+        return \auth()->user()->jobs;
+    }
+    public function getAppliedJobs(){
+        return \auth()->user()->appliedJobs;
     }
 }

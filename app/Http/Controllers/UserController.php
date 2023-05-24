@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -15,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = UserDetail::all();
+        $users = User::all();
         return response()->json([
             'success' => [
                 'users' => $users
@@ -30,28 +29,37 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $input = $request->validate([
-            'fname' => ['required', 'string', 'max:256'],
-            'lname' => ['required', 'string', 'max:256'],
-            'email' => ['required', 'string', 'max:256', 'email'],
+            'first_name' => ['required', 'string', 'max:256'],
+            'last_name' => ['required', 'string', 'max:256'],
+            'email' => ['required', 'email', 'max:256',],
             'password' => ['required', 'string', 'max:256'],
             'gender' => ['required', 'string', 'max:256'],
             'number' => ['required', 'string', 'max:256'],
             'location' => ['required', 'string', 'max:256'],
-            'major' => ['required', 'string', 'max:256'],
-            'role' => ['required', 'string', 'max:256']
+            'major' => ['sometimes', 'string', 'max:256'],
+            'role' => ['required', 'boolean']
         ]);
 
-        UserDetail::query()->create([
-            'first_name' => $request->input('fname'),
-            'last_name' => $request->input('lname'),
+        /**
+         * @var User $user
+        */
+
+        $user = User::query()->create([
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
+            'role' => $request->input('role')
+        ]);
+
+        $user?->detail()->create([
+            'major' => $request->input('major'),
             'gender' => $request->input('gender'),
             'number' => $request->input('number'),
             'location' => $request->input('location'),
-            'major' => $request->input('major'),
-            'role' => $request->input('role')
         ]);
+
+        $user->save();
 
         return response()->json([
             'success' => [
@@ -84,11 +92,11 @@ class UserController extends Controller
                 'fname' => ['string', 'max:256'],
                 'lname' => ['string', 'max:256'],
                 'email' => ['string', 'max:256'],
-                'password' => [ 'string', 'max:256'],
-                'gender' =>  ['string', 'max:256'],
-                'number' => [ 'string', 'max:256'],
-                'location' => [ 'string', 'max:256'],
-                'major' => [ 'string', 'max:256'],
+                'password' => ['string', 'max:256'],
+                'gender' => ['string', 'max:256'],
+                'number' => ['string', 'max:256'],
+                'location' => ['string', 'max:256'],
+                'major' => ['string', 'max:256'],
                 'role' => ['string', 'max:256']
             ]);
         } catch (ValidationException $exception) {
@@ -104,13 +112,18 @@ class UserController extends Controller
             'first_name' => $request->input('fname'),
             'last_name' => $request->input('lname'),
             'email' => $request->input('email'),
-            'password' => $request->input('password'),
+            'password' => Hash::make($request->input('password')),
+            'role' => $request->input('role')
+        ]);
+
+        $user->detail()->update([
+            'major' => $request->input('major'),
             'gender' => $request->input('gender'),
             'number' => $request->input('number'),
             'location' => $request->input('location'),
-            'major' => $request->input('major'),
-            'role' => $request->input('role')
         ]);
+
+        $user->save();
 
         return response()->json([
             'success' => [
@@ -127,5 +140,8 @@ class UserController extends Controller
     {
         $user->detail->detach();
         $user->delete();
+    }
+    public function getRole(){
+        return \auth()->user()->role;
     }
 }

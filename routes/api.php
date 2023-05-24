@@ -15,11 +15,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/oauth/token', [\Laravel\Passport\Http\Controllers\AccessTokenController::class, 'issueToken'])->name('token');
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::resource('job', \App\Http\Controllers\JobController::class)->except(['edit', 'create']);
-    Route::resource('user', \App\Http\Controllers\UserController::class)->except(['edit', 'create']);
-});
+Route::post('user', [\App\Http\Controllers\UserController::class, 'store'])->name('store');
+
 Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
+    Route::get('', [\App\Http\Controllers\JobController::class, 'index'])->name('index');
     Route::get('/locations', [\App\Http\Controllers\JobController::class, 'getLocations'])->name('get-locations');
     Route::get('/industries', [\App\Http\Controllers\JobController::class, 'getIndustries'])->name('get-industries');
 });
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::resource('job', \App\Http\Controllers\JobController::class)->except(['edit', 'create','index']);
+    Route::get('user/role',[\App\Http\Controllers\UserController::class, 'getRole'])->name('role');
+    Route::resource('user', \App\Http\Controllers\UserController::class)->except(['edit', 'create', 'store']);
+    Route::get('user-jobs', [\App\Http\Controllers\JobController::class, 'getUserJobs'])->name('user-jobs');
+    Route::get('applied-jobs', [\App\Http\Controllers\JobController::class, 'getAppliedJobs'])->name('applied-jobs');
+});
+

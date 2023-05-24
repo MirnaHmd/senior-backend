@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('gender');
             $table->string('number');
             $table->string('location');
-            $table->string('major');
+            $table->string('major')->nullable();
             $table->timestamps();
         });
     }
