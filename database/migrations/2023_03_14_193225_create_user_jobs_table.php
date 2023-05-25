@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->foreignIdFor(\App\Models\Job::class)
                 ->index()
                 ->constrained('jobs');
-
+            $table->string('file_path');
             $table->timestamps();
         });
     }

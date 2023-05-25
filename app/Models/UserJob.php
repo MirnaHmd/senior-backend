@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserJob extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'file_path'
+    ];
 }

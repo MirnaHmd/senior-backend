@@ -29,5 +29,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('user', \App\Http\Controllers\UserController::class)->except(['edit', 'create', 'store']);
     Route::get('user-jobs', [\App\Http\Controllers\JobController::class, 'getUserJobs'])->name('user-jobs');
     Route::get('applied-jobs', [\App\Http\Controllers\JobController::class, 'getAppliedJobs'])->name('applied-jobs');
+    Route::post('file_upload', [\App\Http\Controllers\fileUploadController::class, 'fileUpload'])->name('file-upload');
 });
 
