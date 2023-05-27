@@ -14,6 +14,7 @@ class JobController extends Controller
      */
     public function index()
     {
+//        $jobs = Job::query()->paginate(10);
         $jobs = Job::all();
         return response()->json([
             'success' => [
