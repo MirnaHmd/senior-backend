@@ -132,4 +132,7 @@ class JobController extends Controller
     public function getAppliedJobs(){
         return \auth()->user()->appliedJobs;
     }
+    public function getApplicants(Job $job){
+        return $job->users();
+    }
 }
