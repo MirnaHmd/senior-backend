@@ -30,6 +30,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user-jobs', [\App\Http\Controllers\JobController::class, 'getUserJobs'])->name('user-jobs');
     Route::get('applied-jobs', [\App\Http\Controllers\JobController::class, 'getAppliedJobs'])->name('applied-jobs');
     Route::post('file-upload', [\App\Http\Controllers\fileUploadController::class, 'fileUpload'])->name('file-upload');
-    Route::get('applicants', [\App\Http\Controllers\JobController::class, 'getApplicants'])->name('applicants');
+    Route::get('applicants/{job}', [\App\Http\Controllers\JobController::class, 'getApplicants'])->name('applicants');
 });
 

@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 
 class fileUploadController extends Controller
 {
-    public function fileUpload(Request $req){
+    public function fileUpload(Request $req)
+    {
 //        $req->validate([
 //            'file_path' => 'required|mimes:csv,txt,xlx,xls,pdf,docx|max:2048'
 //        ]);
@@ -31,16 +32,22 @@ class fileUploadController extends Controller
 //        $file_path = $req->file('file_path')->store('cv_files');
         if ($req->hasFile('file_path')) {
             $file_path = $req->file('file_path');
+            $path = $file_path->storeAs('cvs' . DIRECTORY_SEPARATOR . 'uploads', date('YmdHis') . '.' . $file_path->getClientOriginalExtension());
             UserJob::query()->create([
                 'user_id' => auth()->user()->id,
                 'job_id' => $req->input('job_id'),
-                'file_path' => $file_path,
-            ]);}
+                'file_path' => $path,
+            ]);
 
-        return redirect()->back()->with('success', 'CV uploaded successfully!');
+            return response()->download(storage_path('app' . DIRECTORY_SEPARATOR . $path));
+        }
+
+        return response()->json([
+            "error" => [""],
+            "message" => "error file not found"
+        ]);
 
     }
-
 
 
 }

@@ -133,6 +133,6 @@ class JobController extends Controller
         return \auth()->user()->appliedJobs;
     }
     public function getApplicants(Job $job){
-        return $job->users();
+        return $job->users;
     }
 }
