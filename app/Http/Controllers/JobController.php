@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\UserJob;
 use Illuminate\Http\Request;
 use Nette\Schema\ValidationException;
 use phpseclib3\Math\BigInteger\Engines\PHP\Reductions\Barrett;
@@ -133,6 +134,27 @@ class JobController extends Controller
         return \auth()->user()->appliedJobs;
     }
     public function getApplicants(Job $job){
-        return $job->users;
+        $users = $job->users;
+        return response()->json([
+            'success' => [
+                'users' => $users
+            ],
+            'message' => 'Applicants fetched Successfully'
+        ]);
+    }
+    public function downloadCv(Request $request){
+
+        $request->validate([
+            'user_id' => ['required', 'numeric', 'exists:users,id'],
+            'job_id' => ['required', 'numeric', 'exists:jobs,id'],
+        ]);
+
+        $path = UserJob::query()->where([
+            ['user_id' , $request->input('user_id')],
+            ['job_id', $request->input('job_id')]
+        ])->pluck('file_path');
+
+        return response()->download(storage_path('app' . DIRECTORY_SEPARATOR . $path));
+
     }
 }
