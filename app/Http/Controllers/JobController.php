@@ -143,18 +143,24 @@ class JobController extends Controller
         ]);
     }
     public function downloadCv(Request $request){
-
+        try{
         $request->validate([
             'user_id' => ['required', 'numeric', 'exists:users,id'],
             'job_id' => ['required', 'numeric', 'exists:jobs,id'],
-        ]);
+        ]);} catch (ValidationException $exception) {
+                return response()->json([
+                    'error' => [
+                        $exception->errors()
+                    ],
+                    'message' => $exception->getMessage()
+                ]);
+        }
 
         $path = UserJob::query()->where([
             ['user_id' , $request->input('user_id')],
             ['job_id', $request->input('job_id')]
         ])->pluck('file_path');
-
-        return response()->download(storage_path('app' . DIRECTORY_SEPARATOR . $path));
+        return response()->download(storage_path('app' . DIRECTORY_SEPARATOR . $path[0]));
 
     }
 }
